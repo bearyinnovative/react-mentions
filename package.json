@@ -1,5 +1,5 @@
 {
-  "name": "react-mentions",
+  "name": "@beary/react-mentions",
   "version": "1.2.0",
   "description": "React mentions input",
   "main": "lib/index.js",
@@ -60,9 +60,9 @@
     "mocha": "^3.2.0",
     "mversion": "^1.10.0",
     "radium": "^0.19.1",
-    "react": "^15.3.2",
+    "react": "^15.5.4",
     "react-addons-test-utils": "^15.3.2",
-    "react-dom": "^15.3.2",
+    "react-dom": "^15.5.4",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-router": "^2.6.1",
     "react-test-renderer": "^15.5.4",
@@ -80,9 +80,5 @@
     "lodash": "^4.5.1",
     "prop-types": "^15.5.8",
     "substyle": "^6.0.0"
-  },
-  "peerDependencies": {
-    "react": ">=0.14.0",
-    "react-dom": ">=0.14.0"
   }
 }
