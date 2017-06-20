@@ -446,6 +446,7 @@ class MentionsInput extends React.Component {
     const input = this.refs.input;
     const highlighter = ReactDOM.findDOMNode(this.refs.highlighter);
     highlighter.scrollLeft = input.scrollLeft;
+    highlighter.scrollTop = input.scrollTop;
   };
 
   handleCompositionStart = () => {
@@ -456,8 +457,23 @@ class MentionsInput extends React.Component {
     isComposing = false;
   };
 
+  // bearyfix: the highlighter should keep in sync with the input as the input is being scrolled
+  syncHighlighterScrolling = () => {
+    if (this.props.singleLine) {
+      return;
+    }
+
+    this.scrollListener = () => requestAnimationFrame(() => {
+      this.updateHighlighterScroll();
+      this.updateSuggestionsPosition();
+    });
+
+    this.refs.input.addEventListener('scroll', this.scrollListener);
+  };
+
   componentDidMount() {
     this.updateSuggestionsPosition();
+    this.syncHighlighterScrolling();
   }
 
   componentDidUpdate() {
@@ -468,6 +484,12 @@ class MentionsInput extends React.Component {
     if (this.state.setSelectionAfterMentionChange) {
       this.setState({setSelectionAfterMentionChange: false});
       this.setSelection(this.state.selectionStart, this.state.selectionEnd);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.scrollListener) {
+      this.refs.input.removeEventListener('scroll', this.scrollListener);
     }
   }
 
