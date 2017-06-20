@@ -662,7 +662,8 @@ const styled = defaultStyle({
       width: "100%",
       height: "100%",
       bottom: 0,
-      overflow: "hidden",
+      // bearyfix: allow input to scroll
+      // overflow: "hidden",
       resize: "none",
 
       // fix weird textarea padding in mobile Safari (see: http://stackoverflow.com/questions/6890149/remove-3-pixels-in-ios-webkit-textarea)
