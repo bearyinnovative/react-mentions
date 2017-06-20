@@ -404,11 +404,12 @@ class MentionsInput extends React.Component {
     let { container } = this.refs;
 
     let suggestions = ReactDOM.findDOMNode(this.refs.suggestions);
-    let highlighter = ReactDOM.findDOMNode(this.refs.highlighter);
 
     if(!suggestions) {
       return;
     }
+
+    let highlighter = ReactDOM.findDOMNode(this.refs.highlighter);
 
     let left = caretPosition.left - highlighter.scrollLeft;
     let position = {};
@@ -420,7 +421,12 @@ class MentionsInput extends React.Component {
       position.left = left
     }
 
-    position.top = caretPosition.top - highlighter.scrollTop;
+    // bearyfix: the suggestions is shown on the top of the caret
+    const { height: suggestionsHeight } = suggestions.getBoundingClientRect();
+    const { lineHeight: inputLineHeightStyle } = window.getComputedStyle(this.refs.input, false);
+    const inputLineHeight = parseFloat(inputLineHeightStyle) / 2;
+
+    position.top = -(suggestionsHeight + inputLineHeight) + (caretPosition.top - highlighter.scrollTop);
 
     if(isEqual(position, this.state.suggestionsPosition)) {
       return;
