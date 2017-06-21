@@ -1,6 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { defaultStyle } from 'substyle';
+
+import map from 'lodash/map';
+import flatMap from 'lodash/flatMap';
+import groupBy from 'lodash/groupBy';
+import reduce from 'lodash/reduce';
 
 import utils from './utils';
 
@@ -19,7 +24,7 @@ class SuggestionsOverlay extends Component {
 
   static defaultProps = {
     suggestions: {},
-    onSelect: () => null,
+    onSelect: () => null
   };
 
   componentDidUpdate() {
@@ -54,29 +59,36 @@ class SuggestionsOverlay extends Component {
         {...style}
         onMouseDown={onMouseDown}
       >
-
         <ul
           ref="suggestions"
           { ...style("list") }
         >
           { this.renderSuggestions() }
         </ul>
-
         { this.renderLoadingIndicator() }
       </div>
     );
   }
 
   renderSuggestions() {
-    return utils.getSuggestions(this.props.suggestions).reduce((result, { suggestions, descriptor }) => [
-      ...result,
+    return reduce(utils.getSuggestions(this.props.suggestions), (result, { suggestions, descriptor }) => {
+      const { mentionDescriptor } = descriptor;
 
-      ...suggestions.map((suggestion, index) => this.renderSuggestion(
-        suggestion,
-        descriptor,
-        result.length + index
-      ))
-    ], []);
+      let index = 0;
+      const groups = groupBy(suggestions, mentionDescriptor.props.groupBy);
+      const groupedSuggestions = flatMap(mentionDescriptor.props.groupNames, (element, name) =>
+        groups[name] ? [
+          <span className={this.props.style("title").className} key={name}>{element}</span>,
+          ...map(groups[name], (suggestion) => this.renderSuggestion(
+            suggestion,
+            descriptor,
+            result.length + (index++)
+          ))
+        ] : []
+      );
+
+      return [...result, ...groupedSuggestions];
+    }, []);
   }
 
   renderSuggestion(suggestion, descriptor, index) {
@@ -140,7 +152,9 @@ const styled = defaultStyle(({ position }) => ({
     margin: 0,
     padding: 0,
     listStyleType: "none",
-  }
+  },
+
+  title: {}
 }));
 
 export default styled(SuggestionsOverlay);
