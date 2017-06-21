@@ -6,6 +6,8 @@ import keys from 'lodash/keys';
 import values from 'lodash/values';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
+import flatten from 'lodash/flatten';
+import groupBy from 'lodash/groupBy';
 
 import { defaultStyle } from 'substyle';
 
@@ -564,13 +566,16 @@ class MentionsInput extends React.Component {
     // neglect async results from previous queries
     if(queryId !== this._queryId) return;
 
+    const groups = groupBy(suggestions, mentionDescriptor.props.groupBy);
+    const groupedSuggestions = flatten(values(groups));
+
     const update = {};
     update[mentionDescriptor.props.type] = {
       query: query,
       mentionDescriptor: mentionDescriptor,
       querySequenceStart: querySequenceStart,
       querySequenceEnd: querySequenceEnd,
-      results: suggestions,
+      results: groupedSuggestions,
       plainTextValue: plainTextValue
     };
 
