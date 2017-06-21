@@ -24,25 +24,25 @@ class SuggestionsOverlay extends Component {
 
   static defaultProps = {
     suggestions: {},
-    onSelect: () => null
+    onSelect: () => null,
   };
 
   componentDidUpdate() {
-    const { suggestions } = this.refs
+    const { suggestions } = this.refs;
     if (!suggestions || suggestions.offsetHeight >= suggestions.scrollHeight || !this.props.scrollFocusedIntoView) {
-      return
+      return;
     }
 
-    const scrollTop = suggestions.scrollTop
+    const scrollTop = suggestions.scrollTop;
     let { top, bottom } = suggestions.children[this.props.focusIndex].getBoundingClientRect();
     const { top: topContainer } = suggestions.getBoundingClientRect();
     top = top - topContainer + scrollTop;
     bottom = bottom - topContainer + scrollTop;
 
-    if(top < scrollTop) {
-      suggestions.scrollTop = top
-    } else if(bottom > suggestions.offsetHeight) {
-      suggestions.scrollTop = bottom - suggestions.offsetHeight
+    if (top < scrollTop) {
+      suggestions.scrollTop = top;
+    } else if (bottom > suggestions.offsetHeight) {
+      suggestions.scrollTop = bottom - suggestions.offsetHeight;
     }
   }
 
@@ -50,7 +50,7 @@ class SuggestionsOverlay extends Component {
     const { suggestions, isLoading, style, onMouseDown } = this.props;
 
     // do not show suggestions until there is some data
-    if(utils.countSuggestions(suggestions) === 0 && !isLoading) {
+    if (utils.countSuggestions(suggestions) === 0 && !isLoading) {
       return null;
     }
 
@@ -61,7 +61,7 @@ class SuggestionsOverlay extends Component {
       >
         <ul
           ref="suggestions"
-          { ...style("list") }
+          { ...style('list') }
         >
           { this.renderSuggestions() }
         </ul>
@@ -70,25 +70,43 @@ class SuggestionsOverlay extends Component {
     );
   }
 
+  collectSuggestionElements(source, suggestions, index, descriptor, prevGroup) {
+    const current = suggestions[index];
+
+    if (!current) {
+      return [];
+    }
+
+    const { mentionDescriptor: { props: { groupBy, groupNames } } } = descriptor;
+    const collectedGroup = groupBy(current);
+
+    const isGroupCollected = collectedGroup === prevGroup;
+    const nameElement = !isGroupCollected ?
+      <li className={this.props.style('title').className}
+          key={collectedGroup}>
+        {groupNames[collectedGroup]}
+      </li> : null;
+
+    return [
+      nameElement,
+      this.renderSuggestion(
+        current,
+        descriptor,
+        source.length + index,
+      ),
+      ...this.collectSuggestionElements(source, suggestions, index + 1, descriptor, collectedGroup)
+    ];
+  }
+
   renderSuggestions() {
-    return reduce(utils.getSuggestions(this.props.suggestions), (result, { suggestions, descriptor }) => {
-      const { mentionDescriptor } = descriptor;
-
-      let index = 0;
-      const groups = groupBy(suggestions, mentionDescriptor.props.groupBy);
-      const groupedSuggestions = flatMap(mentionDescriptor.props.groupNames, (element, name) =>
-        groups[name] ? [
-          <span className={this.props.style("title").className} key={name}>{element}</span>,
-          ...map(groups[name], (suggestion) => this.renderSuggestion(
-            suggestion,
-            descriptor,
-            result.length + (index++)
-          ))
-        ] : []
-      );
-
-      return [...result, ...groupedSuggestions];
-    }, []);
+    return reduce(
+      utils.getSuggestions(this.props.suggestions),
+      (source, { suggestions, descriptor }) => [
+        ...source,
+        ...this.collectSuggestionElements(source, suggestions, 0, descriptor)
+      ],
+      [],
+    );
   }
 
   renderSuggestion(suggestion, descriptor, index) {
@@ -99,38 +117,38 @@ class SuggestionsOverlay extends Component {
 
     return (
       <Suggestion
-        style={this.props.style("item")}
+        style={this.props.style('item')}
         key={ id }
         id={ id }
-        ref={isFocused ? "focused" : null}
+        ref={isFocused ? 'focused' : null}
         query={ query }
         index={ index }
         descriptor={ mentionDescriptor }
         suggestion={ suggestion }
         focused={ isFocused }
         onClick={ () => this.select(suggestion, descriptor) }
-        onMouseEnter={ () => this.handleMouseEnter(index) } />
+        onMouseEnter={ () => this.handleMouseEnter(index) }/>
     );
   }
 
   getID(suggestion) {
-    if(suggestion instanceof String) {
+    if (suggestion instanceof String) {
       return suggestion;
     }
 
     return suggestion.id;
   }
 
-  renderLoadingIndicator () {
-    if(!this.props.isLoading) {
+  renderLoadingIndicator() {
+    if (!this.props.isLoading) {
       return;
     }
 
-    return <LoadingIndicator { ...this.props.style("loadingIndicator") } />
+    return <LoadingIndicator { ...this.props.style('loadingIndicator') } />;
   }
 
   handleMouseEnter(index, ev) {
-    if(this.props.onMouseEnter) {
+    if (this.props.onMouseEnter) {
       this.props.onMouseEnter(index);
     }
   }
@@ -142,7 +160,7 @@ class SuggestionsOverlay extends Component {
 }
 
 const styled = defaultStyle(({ position }) => ({
-  position: "absolute",
+  position: 'absolute',
   zIndex: 1,
   marginTop: 14,
   minWidth: 100,
@@ -151,10 +169,10 @@ const styled = defaultStyle(({ position }) => ({
   list: {
     margin: 0,
     padding: 0,
-    listStyleType: "none",
+    listStyleType: 'none',
   },
 
-  title: {}
+  title: {},
 }));
 
 export default styled(SuggestionsOverlay);
