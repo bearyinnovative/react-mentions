@@ -35,6 +35,9 @@ Mention.propTypes = {
   ]),
 
   isLoading: PropTypes.bool,
+
+  groupNames: PropTypes.object,
+  groupBy: PropTypes.func
 };
 
 Mention.defaultProps = {
@@ -44,7 +47,13 @@ Mention.defaultProps = {
   onRemove: () => null,
   renderSuggestion: null,
   isLoading: false,
-  appendSpaceOnAdd: false
+  appendSpaceOnAdd: false,
+
+
+  groupNames: {
+    all: <h1 key="all">All Suggestions</h1>
+  },
+  groupBy: () => 'all'
 };
 
 export default Mention;
