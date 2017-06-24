@@ -76,7 +76,9 @@ class MentionsInput extends React.Component {
     children: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.arrayOf(PropTypes.element),
-    ]).isRequired
+    ]).isRequired,
+
+    compileMarkup: PropTypes.func
   };
 
   static defaultProps = {
@@ -87,7 +89,8 @@ class MentionsInput extends React.Component {
     },
     onKeyDown: () => null,
     onSelect: () => null,
-    onBlur: () => null
+    onBlur: () => null,
+    compileMarkup: (markup) => markup
   };
 
   constructor(props) {
@@ -596,7 +599,7 @@ class MentionsInput extends React.Component {
     const value = this.props.value || "";
     const start = utils.mapPlainTextIndex(value, this.props.markup, querySequenceStart, 'START', this.props.displayTransform);
     const end = start + querySequenceEnd - querySequenceStart;
-    let insert = utils.makeMentionsMarkup(this.props.markup, suggestion.id, suggestion.display, mentionDescriptor.props.type);
+    let insert = utils.makeMentionsMarkup(this.props.markup, suggestion.id, suggestion.display, mentionDescriptor.props.type, this.props.compileMarkup);
     if (mentionDescriptor.props.appendSpaceOnAdd) {
       insert = insert + ' '
     }
