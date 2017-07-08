@@ -78,7 +78,11 @@ class MentionsInput extends React.Component {
       PropTypes.arrayOf(PropTypes.element),
     ]).isRequired,
 
-    compileMarkup: PropTypes.func
+    compileMarkup: PropTypes.func,
+
+    onCaretPositionChange: PropTypes.func,
+
+    autofocus: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -120,7 +124,7 @@ class MentionsInput extends React.Component {
   }
 
   getInputProps = (isTextarea) => {
-    let { readOnly, disabled, style } = this.props;
+    let { readOnly, disabled, style, autoFocus, onFocus } = this.props;
 
     // pass all props that we don't use through to the input control
     let props = omit(this.props, 'style', keys(MentionsInput.propTypes));
@@ -129,9 +133,11 @@ class MentionsInput extends React.Component {
       ...props,
       ...style("input"),
 
+      autoFocus: autoFocus,
       value: this.getPlainText(),
 
       ...(!readOnly && !disabled && {
+        onFocus: onFocus,
         onChange: this.handleChange,
         onSelect: this.handleSelect,
         onKeyDown: this.handleKeyDown,
@@ -194,6 +200,10 @@ class MentionsInput extends React.Component {
     );
   };
 
+  onCaretPositionChange = (position) => {
+    this.setState({ caretPosition: position });
+  };
+
   renderHighlighter = (inputStyle) => {
     const { selectionStart, selectionEnd } = this.state;
     const { markup, displayTransform, singleLine, children, value, style } = this.props;
@@ -211,7 +221,7 @@ class MentionsInput extends React.Component {
           start: selectionStart,
           end: selectionEnd
         }}
-        onCaretPositionChange={ (position) => this.setState({ caretPosition: position }) }>
+        onCaretPositionChange={ this.onCaretPositionChange }>
 
         { children }
       </Highlighter>
@@ -271,7 +281,7 @@ class MentionsInput extends React.Component {
 
     if(startOfMention !== undefined && this.state.selectionEnd > startOfMention) {
       // only if a deletion has taken place
-      selectionStart = startOfMention;
+      selectionStart = startOfMention + 1;
       selectionEnd = selectionStart;
       setSelectionAfterMentionChange = true;
     }
@@ -498,10 +508,23 @@ class MentionsInput extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const isSelectionControlled = nextProps.selectionStart !== undefined && nextProps.selectionEnd !== undefined;
+
+    if (isSelectionControlled && nextProps.resetSelection) {
+      this.setState({
+        setSelectionAfterMentionChange: nextProps.resetSelection,
+        selectionStart: nextProps.selectionStart,
+        selectionEnd: nextProps.selectionEnd
+      });
+    }
+  }
+
   setSelection = (selectionStart, selectionEnd) => {
     if(selectionStart === null || selectionEnd === null) return;
 
     const el = this.refs.input;
+    this.refs.input.focus();
     if(el.setSelectionRange) {
       el.setSelectionRange(selectionStart, selectionEnd);
     }
