@@ -114,6 +114,8 @@ class MentionsInput extends React.Component {
     };
   }
 
+  resetFocusIndex = () => this.setState({ focusIndex: 0 });
+
   render() {
     return (
       <div ref="container" {...this.props.style}>
@@ -196,7 +198,8 @@ class MentionsInput extends React.Component {
           focusIndex,
           scrollFocusedIntoView: false
         }) }
-        isLoading={this.isLoading()} />
+        isLoading={this.isLoading()}
+        onClose={this.resetFocusIndex}/>
     );
   };
 

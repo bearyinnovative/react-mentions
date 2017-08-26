@@ -20,6 +20,7 @@ class SuggestionsOverlay extends Component {
     scrollFocusedIntoView: PropTypes.bool,
     isLoading: PropTypes.bool,
     onSelect: PropTypes.func,
+    willUnmount: PropTypes.func,
   };
 
   static defaultProps = {
@@ -44,6 +45,10 @@ class SuggestionsOverlay extends Component {
     } else if (bottom > suggestions.offsetHeight) {
       suggestions.scrollTop = bottom - suggestions.offsetHeight;
     }
+  }
+
+  componentWillUnmount() {
+    this.props.onClose && this.props.onClose();
   }
 
   render() {
