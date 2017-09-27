@@ -110,15 +110,35 @@ class MentionsInput extends React.Component {
       suggestions: {},
 
       caretPosition: null,
-      suggestionsPosition: null
+      suggestionsPosition: null,
+
+      dataSources: [],
     };
   }
+
+  static childContextTypes = {
+    registerDataSource: PropTypes.func,
+    updateDataSource: PropTypes.func,
+  };
+
+  getChildContext = () => ({
+    registerDataSource: (dataSource) => {
+      this.setState(prevState => ({ ...prevState, dataSources: prevState.dataSources.concat([dataSource])}))
+    },
+    updateDataSource: (dataSource) => {
+      this.setState(prevState => {
+        const newDataSources = prevState.dataSources.filter(ds => ds.props.type !== dataSource.props.type);
+        return { ...prevState, dataSources: newDataSources.concat([dataSource]) };
+      });
+    }
+  });
 
   resetFocusIndex = () => this.setState({ focusIndex: 0 });
 
   render() {
     return (
       <div ref="container" {...this.props.style}>
+        { this.props.dataSources }
         { this.renderControl() }
         { this.renderSuggestionsOverlay() }
       </div>
@@ -557,7 +577,7 @@ class MentionsInput extends React.Component {
     // Match the trigger patterns of all Mention children the new plain text substring up to the current caret position
     const substring = plainTextValue.substring(0, caretPosition);
 
-    React.Children.forEach(this.props.children, child => {
+    this.state.dataSources.forEach(child => {
       if (!child) {
         return
       }
@@ -661,7 +681,7 @@ class MentionsInput extends React.Component {
 
   isLoading = () => {
     let isLoading = false;
-    React.Children.forEach(this.props.children, function(child) {
+    this.state.dataSources.forEach(function(child) {
       isLoading = isLoading || child && child.props.isLoading;
     });
     return isLoading;
