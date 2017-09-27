@@ -144,8 +144,6 @@ class MentionsInput extends React.Component {
         onSelect: this.handleSelect,
         onKeyDown: this.handleKeyDown,
         onBlur: this.handleBlur,
-        onCompositionStart: this.handleCompositionStart,
-        onCompositionEnd: this.handleCompositionEnd,
       })
     };
   };
