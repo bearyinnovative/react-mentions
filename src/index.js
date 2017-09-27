@@ -1,3 +1,3 @@
 export MentionsInput from './MentionsInput';
-export Mention from './Mention';
+export MentionText from './MentionText';
 export DataSource from './DataSource';

@@ -4,7 +4,7 @@ import { defaultStyle } from 'substyle';
 import isEqual from "lodash/isEqual";
 
 import utils from './utils';
-import Mention from './Mention';
+import MentionText from './MentionText';
 
 const _generateComponentKey = (usedKeys, id) => {
   if(!usedKeys.hasOwnProperty(id)) {
@@ -189,7 +189,7 @@ class Highlighter extends Component {
     }
 
     // no children, use default configuration
-    return Mention(props);
+    return MentionText(props);
   }
 
   // Renders an component to be inserted in the highlighter at the current caret position

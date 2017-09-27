@@ -5,10 +5,10 @@ const styled = defaultStyle({
   fontWeight: "inherit"
 });
 
-const Mention = styled(({ display, style }) => (
+const MentionText = styled(({ display, style }) => (
   <strong {...style}>
     { display }
   </strong>
 ));
 
-export default Mention;
+export default MentionText;
