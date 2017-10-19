@@ -135,6 +135,9 @@ class MentionsInput extends React.Component {
 
   resetFocusIndex = () => this.setState({ focusIndex: 0 });
 
+  focus = () => this.refs.input.focus();
+  blur = () => this.refs.input.blur();
+
   render() {
     return (
       <div ref="container" {...this.props.style}>
