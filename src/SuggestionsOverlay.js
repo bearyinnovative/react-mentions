@@ -2,9 +2,6 @@ import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { defaultStyle } from 'substyle';
 
-import map from 'lodash/map';
-import flatMap from 'lodash/flatMap';
-import groupBy from 'lodash/groupBy';
 import reduce from 'lodash/reduce';
 
 import utils from './utils';

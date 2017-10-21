@@ -133,7 +133,7 @@ class MentionsInput extends React.Component {
     }
   });
 
-  resetFocusIndex = () => this.setState({ focusIndex: 0 });
+  resetFocusIndex = () => this.setState({ focusIndex: 0, suggestionsClassNameModifier: '' });
 
   focus = () => this.refs.input.focus();
   blur = () => this.refs.input.blur();
@@ -205,9 +205,15 @@ class MentionsInput extends React.Component {
       // do not show suggestions when the input does not have the focus
       return null;
     }
+
+    const style = this.props.style({
+      'suggestions': true,
+      [this.state.suggestionsClassNameModifier]: true
+    });
+
     return (
       <SuggestionsOverlay
-        style={ this.props.style("suggestions") }
+        style={ style }
         position={ this.state.suggestionsPosition }
         focusIndex={ this.state.focusIndex }
         scrollFocusedIntoView={ this.state.scrollFocusedIntoView }
@@ -632,11 +638,11 @@ class MentionsInput extends React.Component {
     // save in property so that multiple sync state updates from different mentions sources
     // won't overwrite each other
     this.suggestions = utils.extend({}, this.suggestions, update)
-
     const { focusIndex } = this.state
-    const suggestionsCount = utils.countSuggestions(this.suggestions);
+    const suggestionsCount = utils.countSuggestions(this.suggestions)
     this.setState({
       suggestions: this.suggestions,
+      suggestionsClassNameModifier: mentionDescriptor.props.modifier,
       focusIndex: focusIndex >= suggestionsCount ? Math.max(suggestionsCount - 1, 0) : focusIndex,
     });
   };
