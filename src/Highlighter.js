@@ -76,7 +76,7 @@ class Highlighter extends Component {
   }
 
   render() {
-    let { selection, value, markup, displayTransform, style, inputStyle } = this.props;
+    let { selection, value, markup, displayTransform, style, inputStyle, appendedTextElements } = this.props;
 
     // If there's a caret (i.e. no range selection), map the caret position into the marked up value
     var caretPositionInMarkup;
@@ -139,8 +139,8 @@ class Highlighter extends Component {
           ...inputStyle,
           ...style.style
         }}>
-
         { resultComponents }
+        { appendedTextElements }
       </div>
     );
   }

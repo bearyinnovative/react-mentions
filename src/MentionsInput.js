@@ -77,6 +77,10 @@ class MentionsInput extends React.Component {
       PropTypes.element,
       PropTypes.arrayOf(PropTypes.element),
     ]).isRequired,
+    appendedTextElements: PropTypes.oneOfType([
+      PropTypes.node,
+      PropTypes.arrayOf(PropTypes.node),
+    ]),
 
     compileMarkup: PropTypes.func,
 
@@ -236,7 +240,7 @@ class MentionsInput extends React.Component {
 
   renderHighlighter = (inputStyle) => {
     const { selectionStart, selectionEnd } = this.state;
-    const { markup, displayTransform, singleLine, children, value, style } = this.props;
+    const { markup, displayTransform, singleLine, children, value, style, appendedTextElements } = this.props;
 
     return (
       <Highlighter
@@ -251,7 +255,8 @@ class MentionsInput extends React.Component {
           start: selectionStart,
           end: selectionEnd
         }}
-        onCaretPositionChange={ this.onCaretPositionChange }>
+        onCaretPositionChange={ this.onCaretPositionChange }
+        appendedTextElements={ appendedTextElements }>
 
         { children }
       </Highlighter>
