@@ -87,6 +87,12 @@ class MentionsInput extends React.Component {
     onCaretPositionChange: PropTypes.func,
 
     autofocus: PropTypes.bool,
+
+    dataSources: PropTypes.arrayOf(PropTypes.node),
+
+    selectionStart: PropTypes.number,
+    selectionEnd: PropTypes.number,
+    resetSelection: PropTypes.bool,
   };
 
   static defaultProps = {
