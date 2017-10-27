@@ -17,7 +17,7 @@ class SuggestionsOverlay extends Component {
     scrollFocusedIntoView: PropTypes.bool,
     isLoading: PropTypes.bool,
     onSelect: PropTypes.func,
-    willUnmount: PropTypes.func,
+    onClose: PropTypes.func,
   };
 
   static defaultProps = {
@@ -51,10 +51,13 @@ class SuggestionsOverlay extends Component {
   render() {
     const { suggestions, isLoading, style, onMouseDown } = this.props;
 
-    // do not show suggestions until there is some data
-    if (utils.countSuggestions(suggestions) === 0 && !isLoading) {
+    const hasHit = utils.hasHitMention(suggestions);
+
+    if (!hasHit) {
       return null;
     }
+
+    const hasSuggestions = utils.countSuggestions(suggestions);
 
     return (
       <div
@@ -65,7 +68,7 @@ class SuggestionsOverlay extends Component {
           ref="suggestions"
           { ...style('list') }
         >
-          { this.renderSuggestions() }
+          { hasSuggestions ? this.renderSuggestions() : this.renderEmptySuggestion() }
         </ul>
         { this.renderLoadingIndicator() }
       </div>
@@ -106,6 +109,21 @@ class SuggestionsOverlay extends Component {
       (source, { suggestions, descriptor }) => [
         ...source,
         ...this.collectSuggestionElements(source, suggestions, 0, descriptor)
+      ],
+      [],
+    );
+  }
+
+  renderEmptySuggestion() {
+    return reduce(
+      utils.getSuggestions(this.props.suggestions),
+      (source, { descriptor: { mentionDescriptor } }, i) => [
+        ...source,
+        (mentionDescriptor.props.displayEmptySuggestion &&
+          <Suggestion
+            key={i}
+            style={this.props.style('item')}
+            placeholder={mentionDescriptor.props.displayEmptySuggestion(mentionDescriptor)}/>)
       ],
       [],
     );

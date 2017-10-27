@@ -32,7 +32,7 @@ class Suggestion extends Component {
         { ...this.props.style }
       >
 
-        { this.renderContent() }
+        { this.props.placeholder ? this.props.placeholder : this.renderContent() }
       </li>
     );
   }

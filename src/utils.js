@@ -331,6 +331,10 @@ module.exports = {
     return result;
   },
 
+  hasHitMention: function(suggestions) {
+    return Object.keys(suggestions).length > 0;
+  },
+
   countSuggestions: function(suggestions) {
     let result = 0;
     for(let prop in suggestions) {

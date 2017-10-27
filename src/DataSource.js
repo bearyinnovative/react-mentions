@@ -35,7 +35,9 @@ export default class DataSource extends PureComponent {
     type: PropTypes.string.isRequired,
 
     groupNames: PropTypes.object,
-    groupBy: PropTypes.func
+    groupBy: PropTypes.func,
+
+    displayEmptySuggestion: PropTypes.func,
   };
 
   static defaultProps = {
