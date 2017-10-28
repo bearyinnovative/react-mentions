@@ -362,6 +362,17 @@ module.exports = {
     return result;
   },
 
+  shouldSuggestionsOverlayShow: function(suggestions) {
+    const keys = Object.keys(suggestions);
+    for (let mentionType of keys) {
+      const shouldShow = suggestions[mentionType].mentionDescriptor.props.shouldSuggestionsOverlayShow;
+      if (shouldShow && !shouldShow(suggestions[mentionType])) {
+        return false;
+      }
+    }
+    return true;
+  },
+
   getSuggestion: function(suggestions, index) {
     return this.getSuggestions(suggestions).reduce((result, { suggestions, descriptor }) => [
       ...result,

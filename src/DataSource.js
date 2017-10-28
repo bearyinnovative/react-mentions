@@ -38,6 +38,8 @@ export default class DataSource extends PureComponent {
     groupBy: PropTypes.func,
 
     displayEmptySuggestion: PropTypes.func,
+
+    shouldSuggestionsOverlayShow: PropTypes.func,
   };
 
   static defaultProps = {
