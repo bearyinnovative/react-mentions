@@ -1,14 +1,14 @@
-import React from 'react';
-import { defaultStyle } from 'substyle';
+import React, { PureComponent } from 'react';
 
-const styled = defaultStyle({
-  fontWeight: "inherit"
-});
-
-const MentionText = styled(({ display, style }) => (
-  <strong {...style}>
-    { display }
-  </strong>
-));
+class MentionText extends PureComponent {
+  render() {
+    const { display } = this.props;
+    return (
+      <strong>
+        { display }
+      </strong>
+    );
+  }
+}
 
 export default MentionText;
