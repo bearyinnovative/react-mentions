@@ -388,23 +388,23 @@ class MentionsInput extends React.Component {
     switch(ev.keyCode) {
       case KEY.ESC: {
         this.clearSuggestions();
-        return;
+        break;
       }
       case KEY.DOWN: {
         this.shiftFocus(+1);
-        return;
+        break;
       }
       case KEY.UP: {
         this.shiftFocus(-1);
-        return;
+        break;
       }
       case KEY.RETURN: {
         this.selectFocused();
-        return;
+        break;
       }
       case KEY.TAB: {
         this.selectFocused();
-        return;
+        break;
       }
     }
 
