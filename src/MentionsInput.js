@@ -175,7 +175,6 @@ class MentionsInput extends React.Component {
         onFocus: onFocus,
         onChange: this.handleChange,
         onSelect: this.handleSelect,
-        onKeyDown: this.handleKeyDown,
         onBlur: this.handleBlur,
       })
     };
@@ -408,6 +407,8 @@ class MentionsInput extends React.Component {
         return;
       }
     }
+
+    this.props.onKeyDown(ev);
   };
 
   shiftFocus = (delta) => {
@@ -534,6 +535,8 @@ class MentionsInput extends React.Component {
   componentDidMount() {
     this.updateSuggestionsPosition();
     this.syncHighlighterScrolling();
+
+    this.refs.input.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate() {
@@ -548,6 +551,7 @@ class MentionsInput extends React.Component {
   }
 
   componentWillUnmount() {
+    this.refs.input.removeEventListener('keydown', this.handleKeyDown);
     if (this.scrollListener) {
       this.refs.input.removeEventListener('scroll', this.scrollListener);
     }
