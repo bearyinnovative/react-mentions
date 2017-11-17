@@ -47,7 +47,7 @@ const _getDataProvider = function(data) {
   }
 };
 
-const KEY = { TAB : 9, RETURN : 13, ESC : 27, UP : 38, DOWN : 40 };
+const KEY = { TAB : 9, RETURN : 13, ESC : 27, UP : 38, DOWN : 40, SPACE: 32 };
 
 let isComposing = false;
 
@@ -398,6 +398,7 @@ class MentionsInput extends React.Component {
         this.shiftFocus(-1);
         break;
       }
+      case KEY.SPACE:
       case KEY.RETURN: {
         this.selectFocused();
         break;
