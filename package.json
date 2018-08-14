@@ -75,6 +75,9 @@
     "webpack": "2.2.1",
     "webpack-dev-server": "2.4.1"
   },
+  "publishConfig": {
+    "registry": "http://116.85.45.93:4873"
+  },
   "dependencies": {
     "babel-runtime": "^6.22.0",
     "lodash": "^4.5.1",
